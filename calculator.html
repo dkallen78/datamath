@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      Calculator
+    </title>
+    <link rel="stylesheet" href="calculator.css" />
+  </head>
+  <body>
+    <div id="calcBox">
+      <div id="calculator">
+      <div id="display">0</div>
+      <div id="label"><img src="tiLogo.svg">Datamath Ⅱ</div>
+      <button onclick="clearAll()">C</button>
+      <button onclick="clearLast()">CE</button>
+      <button>%</button>
+      <button onclick="setFunction('÷')">÷</button>
+      <button class="white" onclick="inputNumber('7')">7</button>
+      <button class="white" onclick="inputNumber('8')">8</button>
+      <button class="white" onclick="inputNumber('9')">9</button>
+      <button onclick="setFunction('×')">×</button>
+      <button class="white" onclick="inputNumber('4')">4</button>
+      <button class="white" onclick="inputNumber('5')">5</button>
+      <button class="white" onclick="inputNumber('6')">6</button>
+      <button onclick="setFunction('-')">-</button>
+      <button class="white" onclick="inputNumber('1')">1</button>
+      <button class="white" onclick="inputNumber('2')">2</button>
+      <button class="white" onclick="inputNumber('3')">3</button>
+      <button onclick="setFunction('+')">+</button>
+      <div id="bottom">
+        <button class="white" onclick="inputNumber('0')">0</button>
+        <button class="white" onclick="hasDecimal()">.</button>
+        <button onclick="calculate()">=</button>
+      </div>
+    </div>
+    </div>
+  </body>
+  <script src="calculator.js"></script>
+</html>

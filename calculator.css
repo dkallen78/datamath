@@ -1,0 +1,84 @@
+body {
+  display: flex;
+  justify-content: center;
+}
+
+#calcBox {
+  padding: 5rem .5rem .5rem;
+  border-radius: 1rem 1rem .25rem .25rem;
+  background-image: linear-gradient(to bottom,
+                                    hsl(44, 33.3%, 62.9%) 12%,
+                                    hsl(44, 50%, 70%) 17%);
+}
+
+#calculator {
+  display: grid;
+  grid-template-columns: 3rem 3rem 3rem 3rem;
+  grid-template-rows: auto auto auto auto auto auto auto;
+  grid-gap: .75rem;
+  padding: 1rem;
+  background-color: black;
+  border-radius: 1rem 1rem 0 0;
+}
+
+#display {
+  grid-column: 1 / 5;
+  grid-row: 1 / 2;
+  border: 1px solid black;
+  height: 3rem;
+  color: red;
+  font-family: monospace;
+  font-size: 1.5rem;
+  text-align: right;
+}
+
+#label {
+  grid-column: 1 / 5;
+  grid-row: 2 / 3;
+  height: 2.1rem;
+  margin-right: .2rem;
+  color: white;
+  text-align: right;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+img {
+  height: 1.5rem;
+  margin-left: 2rem;
+  float: left;
+}
+
+button {
+  height: 2.5rem;
+  font-weight: bold;
+  font-size: 1.25rem;
+  background-color: hsl(44, 33.3%, 62.9%);
+  border-color: hsl(44, 33.3%, 72.9%);
+}
+
+#bottom {
+  display: flex;
+  grid-column: 1 / 5;
+  grid-row: 7 / 8;
+}
+
+#bottom > button:first-child {
+  flex-grow: 1.25;
+}
+
+#bottom > button:nth-child(2) {
+  width: 3rem;
+  margin: 0 .75rem;
+}
+
+#bottom > button:last-child {
+  flex-grow: 1.25;
+  background-color: hsl(24, 94%, 50%);
+  border-color: hsl(24, 94%, 60%);
+}
+
+.white {
+  background-color: white;
+  border-color: white;
+}
