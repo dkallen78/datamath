@@ -124,6 +124,13 @@ function inputNumber(item) {
   if (overflow) return;
   console.log(`INPUT ${item}`);
   if (term1) console.log(`term1 ${term1}`);
+  if (calced) {
+    console.log("calc country");
+    constant = null;
+    term1 = null;
+    term2 = null;
+    calced = false;
+  }
   if (inputString[0] === "0") {
     inputString = item;
   } else {
@@ -196,9 +203,7 @@ function calculate() {
   console.log("CALCULATE");
   if (typeof constant !== "number") {
     console.log("NO CONSTANT");
-    /*if (typeof term2 !== "number") {
-      term2 = parseFloat(inputString);
-    }*/
+
     if (inputString) {
       term2 = parseFloat(inputString);
     }
@@ -208,7 +213,6 @@ function calculate() {
       if (typeof term2 !== "number") {
         term2 = term1;
       }
-
     } else {
       constant = term2;
     }
