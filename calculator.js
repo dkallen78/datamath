@@ -142,7 +142,7 @@ function inputNumber(item) {
   //----------------------------------------------------//
 
   if (overflow) return;
-  if (calced) {
+  /*if (calced) {
     //--------------------------------------------------//
     //If a number is entered immediately after pressing //
     //  the "=" key, it clears the memory and starts a  //
@@ -153,7 +153,7 @@ function inputNumber(item) {
     term1 = null;
     term2 = null;
     calced = false;
-  }
+  }*/
 
   if (inputString[0] === "0") {
     //--------------------------------------------------//
@@ -235,6 +235,18 @@ function setFunction(operation) {
   //----------------------------------------------------//
 
   if (overflow) return;
+  if (calced) {
+    //--------------------------------------------------//
+    //If a number is entered immediately after pressing //
+    //  the "=" key, followed by an operation, it       //
+    //  clears the memory and starts a new problem.     //
+    //--------------------------------------------------//
+
+    constant = null;
+    term1 = null;
+    term2 = null;
+    calced = false;
+  }
   calced = false;
   if (!inputString) {
     //--------------------------------------------------//
@@ -329,28 +341,78 @@ function calculate() {
       //------------------------------------------------//
 
       if (typeof term2 !== "number") {
+        //------------------------------------------------//
+        //term1 is assigned to term2 because we want to   //
+        //  divide the number by itself two times to find //
+        //  its reciprocal and term1 changes with each    //
+        //  calculation, term2 does not.                  //
+        //------------------------------------------------//
+
         term2 = term1;
       }
     } else {
+      //------------------------------------------------//
+      //If the last function wasn't multiplication, then//
+      //  the second value entered is assigned to the   //
+      //  constant variable                             //
+      //------------------------------------------------//
+
       constant = term2;
     }
     if (negative) {
+      //------------------------------------------------//
+      //If the negative function has been activated then//
+      //  we make the number negative before calculating//
+      //  a result                                      //
+      //------------------------------------------------//
+
       term2 *= -1;
       negative = false;
     }
     if (func === "×" && !inputString) {
+      //------------------------------------------------//
+      //This handles the squaring function. If the "="  //
+      //  key is pressed directly after the "×" key, it //
+      //  computes the square of the number             //
+      //------------------------------------------------//
+
       term1 = term1 ** 2;
     } else if (func === "÷" && !inputString) {
+      //------------------------------------------------//
+      //This handles the reciprocal function. If the "="//
+      //  key is pressed directly after the "÷" key, it //
+      //  divides the number by itself, and stores that //
+      //  number. Press "=" again to find the reciprocal//
+      //------------------------------------------------//
+
       term1 = term1 / term2;
     } else {
+      //------------------------------------------------//
+      //If we're not doing either of those functions,   //
+      //  calculate the answer of term1 operated on by  //
+      //  term2, then assign that value to term1        //
+      //------------------------------------------------//
+
       term1 = operator();
     }
     display(term1);
   } else if (!inputString) {
+    //------------------------------------------------//
+    //If there's no input, we apply the previous      //
+    //  operation to the number currently displayed   //
+    //  (not in listed functionality)                 //
+    //------------------------------------------------//
+
     term1 = parseFloat(document.getElementById("display").innerHTML);
     term1 = operator();
     display(term1);
   } else {
+    //------------------------------------------------//
+    //If a constant is saved in memory, and a new     //
+    //  inputString has been entered, then the new    //
+    //  input is operated on by the saved constant    //
+    //------------------------------------------------//
+
     term1 = parseFloat(inputString);
     term2 = constant;
     display(operator());
@@ -387,9 +449,23 @@ function plusButton() {
 
   if (overflow) return;
   if (typeof term1 === "number" && typeof term2 === "number" && !inputString && !calced) {
+    //--------------------------------------------------//
+    //The Datamath lets you repeatedly add the same     //
+    //  number by continuing to press the "+" key. If   //
+    //  there is a value assigned to both term1 and     //
+    //  term2 and the inputString is blank, AND we      //
+    //  haven't just completed a calculation, then we   //
+    //  do that function.                               //
+    //--------------------------------------------------//
+
     term1 = add(term1, term2);
     display(term1);
   } else {
+    //--------------------------------------------------//
+    //Otherwise, we run the setFunction() function for  //
+    //  addition                                        //
+    //--------------------------------------------------//
+
     setFunction("+");
   }
 }
@@ -401,10 +477,10 @@ function minusButton() {
   //----------------------------------------------------//
 
   if (overflow) return;
-  if (!inputString && (func !== "-" || typeof func !== "string")) {
+  if (!inputString && !calced && (func !== "-" || typeof func !== "string")) {
     negative = true;
     display("-0");
-  } else if (typeof term1 === "number" && typeof term2 === "number" && !inputString) {
+  } else if (typeof term1 === "number" && typeof term2 === "number" && !inputString && !calced) {
     term1 = operator();
     display(term1);
   } else {
