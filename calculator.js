@@ -128,7 +128,7 @@ function hasDecimal(numString) {
   //  for decimal                                       //
   //----------------------------------------------------//
 
-  for (let i = 0; i < numString.length - 1; i++) {
+  for (let i = 0; i < numString.length; i++) {
     if (numString[i] === ".") {
       return true;
     }
@@ -366,6 +366,7 @@ function calculate() {
 
       constant = term2;
     }
+
     if (negative) {
       //------------------------------------------------//
       //If the negative function has been activated then//
@@ -376,6 +377,7 @@ function calculate() {
       term2 *= -1;
       negative = false;
     }
+
     if (func === "×" && !inputString) {
       //------------------------------------------------//
       //This handles the squaring function. If the "="  //
@@ -399,7 +401,6 @@ function calculate() {
       //  calculate the answer of term1 operated on by  //
       //  term2, then assign that value to term1        //
       //------------------------------------------------//
-
       term1 = operator();
     }
     display(term1);
@@ -535,12 +536,32 @@ function percent() {
   inputString = "";
 }
 
-function add(term1, term2) {
-  return term1 + term2;
+function add(x, y) {
+  //----------------------------------------------------//
+  //Adds two numbers. The crazy upsizing/downsizing     //
+  //  is to accomodate the "Curse of Floating Point     //
+  //  Numbers"                                          //
+  //----------------------------------------------------//
+
+  let digits = countDigits(x)[1] + countDigits(y)[1];
+  let bigX = x * 10 ** (digits);
+  let bigY = y * 10 ** (digits);
+  let sum = (bigX + bigY) / (10 ** digits);
+  return sum;
 }
 
-function subtract(term1, term2) {
-  return term1 - term2;
+function subtract(x, y) {
+  //----------------------------------------------------//
+  //Subtracts two numbers. The crazy upsizing/downsizing//
+  //  is to accomodate the "Curse of Floating Point     //
+  //  Numbers"                                          //
+  //----------------------------------------------------//
+
+  let digits = countDigits(x)[1] + countDigits(y)[1];
+  let bigX = x * 10 ** (digits);
+  let bigY = y * 10 ** (digits);
+  let difference = (bigX - bigY) / (10 ** digits);
+  return difference;
 }
 
 function multiply(x, y) {
@@ -556,6 +577,19 @@ function multiply(x, y) {
   return product / 100000000;
 }
 
-function divide(term1, term2) {
-  return term1 / term2;
+function divide(x, y) {
+  //----------------------------------------------------//
+  //Subtracts two numbers. The crazy upsizing/downsizing//
+  //  is to accomodate the "Curse of Floating Point     //
+  //  Numbers"                                          //
+  //----------------------------------------------------//
+
+  let digits = countDigits(x)[1] + countDigits(y)[1];
+  /*if (digits % 2 === 1) {
+    digits++;
+  }*/
+  x *= 10 ** digits;
+  y *= 10 ** digits;
+  let quotient = x / y;
+  return quotient;
 }
