@@ -56,7 +56,7 @@ document.onkeypress = function(event) {
       minusButton();
       break;
     case "*":
-      timesButton();
+      setFunction("×");
       break;
     case "/":
       event.preventDefault();
@@ -211,6 +211,7 @@ function display(number) {
 
     number = number.toString(10);
   }
+
   if (hasDecimal(number)) {
     //--------------------------------------------------//
     //The Datamath Ⅱ always displays a decimal. If it's //
@@ -299,9 +300,15 @@ function setFunction(operation) {
     }
   }
 
+  let disp = document.getElementById("display");
+  let dispText = disp.innerHTML;
+  disp.innerHTML = "";
+  setTimeout(function() {
+    disp.innerHTML = dispText;
+  }, 50);
+
   constant = null;
   inputString = "";
-
   func = operation;
   operator = operations[operation];
 }
@@ -478,18 +485,32 @@ function minusButton() {
 
   if (overflow) return;
   if (!inputString && !calced && (func !== "-" || typeof func !== "string")) {
+    //--------------------------------------------------//
+    //This determines when the "-" key is for making a  //
+    //  number negative instead of indicating the       //
+    //  subtraction operation                           //
+    //--------------------------------------------------//
+
     negative = true;
     display("-0");
   } else if (typeof term1 === "number" && typeof term2 === "number" && !inputString && !calced) {
+    //--------------------------------------------------//
+    //If both term1 and term2 have values and the       //
+    //  inputString is empty AND the "=" key hasn't just//
+    //  been pressed, the continued subtraction         //
+    //  operation is ran                                //
+    //--------------------------------------------------//
+
     term1 = operator();
     display(term1);
   } else {
+    //--------------------------------------------------//
+    //Otherwise, treat it as a normal subtraction       //
+    //  operation                                       //
+    //--------------------------------------------------//
+
     setFunction("-");
   }
-}
-
-function timesButton() {
-  setFunction("×");
 }
 
 function percent() {
@@ -501,6 +522,12 @@ function percent() {
   term2 = parseFloat(inputString);
   term2 = term1 * (term2 / 100);
   if (func === "-") {
+    //--------------------------------------------------//
+    //The Datamath puts a negative sign in front of     //
+    //  percentages when called after a subtraction     //
+    //  operation                                       //
+    //--------------------------------------------------//
+
     display("-" + term2);
   } else {
     display(term2);
@@ -517,6 +544,12 @@ function subtract(term1, term2) {
 }
 
 function multiply(x, y) {
+  //----------------------------------------------------//
+  //I use these large multiplications and divisions to  //
+  //  avoid the imprecision inherent in floating point  //
+  //  arithmetic                                        //
+  //----------------------------------------------------//
+
   x *= 10000;
   y *= 10000;
   let product = x * y;

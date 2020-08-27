@@ -15,3 +15,7 @@ CE is v, and % is p.
 
 Since I don't have a physical Datamath II to play with, I based all of my functionality
 on what I saw in the manual.
+
+Some of the interesting things I wasn't expecting were the functions for finding the
+square and reciprocal of a number. I also didn't expect the constants and repeating
+addition/subtraction (which is often achieved by repeated use of the "=" key).
