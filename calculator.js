@@ -124,6 +124,8 @@ function decimalButton() {
 function hasDecimal(numString) {
   //----------------------------------------------------//
   //Checks to see if a decimal is in a number           //
+  //string-> numString: string of a number to check     //
+  //  for decimal                                       //
   //----------------------------------------------------//
 
   for (let i = 0; i < numString.length - 1; i++) {
@@ -141,14 +143,32 @@ function inputNumber(item) {
 
   if (overflow) return;
   if (calced) {
+    //--------------------------------------------------//
+    //If a number is entered immediately after pressing //
+    //  the "=" key, it clears the memory and starts a  //
+    //  new problem                                     //
+    //--------------------------------------------------//
+
     constant = null;
     term1 = null;
     term2 = null;
     calced = false;
   }
+
   if (inputString[0] === "0") {
+    //--------------------------------------------------//
+    //The original Datamath Ⅱ displayed a 0 by default, //
+    //  this is to prevent it from displaying in front  //
+    //  of my term                                      //
+    //--------------------------------------------------//
+
     inputString = item;
   } else {
+    //--------------------------------------------------//
+    //If there is no leading 0, then we just append the //
+    //  last number entered                             //
+    //--------------------------------------------------//
+
     inputString += item;
   }
   display(inputString)
@@ -157,24 +177,48 @@ function inputNumber(item) {
 function display(number) {
   //----------------------------------------------------//
   //Outputs a number to the display of the calculator   //
+  //float-> number: number to be displayed              //
   //----------------------------------------------------//
 
   let disp = document.getElementById("display");
   let digits = countDigits(number);
   if (digits[0] > 8) {
+    //--------------------------------------------------//
+    //The Datamath Ⅱ only displayed 8 digits but it had //
+    //  a unique way of expressing whole numbers over 8 //
+    //  digits. This handles that.                      //
+    //--------------------------------------------------//
+
     overflow = true;
     number /= 100000000;
     number = number.toFixed(7);
     term1 = number;
     number = "C" + number;
   } else if ((digits[0] + digits[1]) > 8 && typeof digits[1] === "number") {
+    //--------------------------------------------------//
+    //If the number has a fractional part, and it's over//
+    //  8 digits, then the fractional part is rounded   //
+    //  to the 8th digit                                //
+    //--------------------------------------------------//
+
     number = number.toFixed(8 - digits[0]);
   }
 
   if (typeof number === "number") {
+    //--------------------------------------------------//
+    //Converts the number to a string                   //
+    //--------------------------------------------------//
+
     number = number.toString(10);
   }
   if (hasDecimal(number)) {
+    //--------------------------------------------------//
+    //The Datamath Ⅱ always displays a decimal. If it's //
+    //  displaying a whole number then that decimal is  //
+    //  at the far right. This looks for that decimal   //
+    //  and if it's not there, puts it in               //
+    //--------------------------------------------------//
+
     disp.innerHTML = number;
   } else {
     disp.innerHTML = number + ".";
@@ -186,23 +230,58 @@ function setFunction(operation) {
   //Sets the current operation of the calculator to be  //
   //  executed when the enter button is pressed or      //
   //  another function key is pressed                   //
+  //string-> operation: either +, -, ×, or ÷ based on   //
+  //  which key the user pressed                        //
   //----------------------------------------------------//
 
   if (overflow) return;
   calced = false;
   if (!inputString) {
+    //--------------------------------------------------//
+    //If the inputString is blank, that means one of    //
+    //  the Datamath's "hidden" functions is being used //
+    //  and that we need to get the value of the        //
+    //  previous answer                                 //
+    //--------------------------------------------------//
+
     term1 = parseFloat(document.getElementById("display").innerHTML);
   } else if (typeof term1 === "number") {
+    //--------------------------------------------------//
+    //If there is an inputString and there's already a  //
+    //  number in term1, pressing a function key again  //
+    //  forces a calculation of the new number input,   //
+    //  and the previous number in memory               //
+    //--------------------------------------------------//
+
     term2 = parseFloat(inputString);
     if (negative) {
+      //------------------------------------------------//
+      //If the negative function has been activated then//
+      //  we make the number negative before calculating//
+      //  a result                                      //
+      //------------------------------------------------//
+
       term2 *= -1;
       negative = false;
     }
+
     term1 = operator();
     display(term1);
   } else {
+    //--------------------------------------------------//
+    //If there is an inputString but there is nothing   //
+    //  in term1, then we assign the number that was    //
+    //  input to term1.                                 //
+    //--------------------------------------------------//
+
     term1 = parseFloat(inputString);
     if (negative) {
+      //------------------------------------------------//
+      //If the negative function has been activated then//
+      //  we make the number negative before calculating//
+      //  a result                                      //
+      //------------------------------------------------//
+
       term1 *= -1;
       negative = false;
     }
@@ -222,13 +301,33 @@ function calculate() {
 
   if (overflow) return;
   if (typeof constant !== "number") {
+    //--------------------------------------------------//
+    //When there isn's a number assigned to the constant//
+    //  variable...                                     //
+    //--------------------------------------------------//
 
     if (inputString) {
+      //------------------------------------------------//
+      //If there is input, assign it to term2           //
+      //------------------------------------------------//
+
       term2 = parseFloat(inputString);
     }
     if (func === "×") {
+      //------------------------------------------------//
+      //If the last function key pressed was "×", then  //
+      //  assign the value of term1 to constant         //
+      //------------------------------------------------//
+
       constant = term1;
     } else if (func === "÷" && !inputString) {
+      //------------------------------------------------//
+      //If the last function was division and no number //
+      //  input was entered after the function key was  //
+      //  pressed, that invokes the reciprocal function //
+      //  which technically needs to be invoked twice   //
+      //------------------------------------------------//
+
       if (typeof term2 !== "number") {
         term2 = term1;
       }
