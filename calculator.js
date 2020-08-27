@@ -47,7 +47,7 @@ document.onkeypress = function(event) {
       inputNumber("0");
       break;
     case ".":
-      hasDecimal();
+      decimalButton();
       break;
     case "+":
       plusButton();
@@ -104,13 +104,20 @@ function clearLast() {
 
 }
 
-function hasDecimal() {
-  for (let i = 0; i < inputString.length; i++) {
-    if (inputString[i] === ".") {
-      return;
+function decimalButton() {
+  if (!hasDecimal(inputString)) {
+    inputNumber(".");
+  }
+}
+
+function hasDecimal(numString) {
+
+  for (let i = 0; i < numString.length - 1; i++) {
+    if (numString[i] === ".") {
+      return true;
     }
   }
-  inputNumber(".");
+  return false;
 }
 
 function inputNumber(item) {
@@ -130,20 +137,27 @@ function display(number) {
   let disp = document.getElementById("display");
   let digits = countDigits(number);
   if (digits[0] > 8) {
-    //console.log(typeof number);
     overflow = true;
-    //console.log(number, typeof number);
     number /= 100000000;
-    //console.log(number, typeof number);
     number = number.toFixed(7);
     term1 = number;
-    //console.log(number, typeof number);
     number = "C" + number;
   } else if ((digits[0] + digits[1]) > 8 && typeof digits[1] === "number") {
     number = number.toFixed(8 - digits[0]);
   }
-  console.log(`DISPLAY ${number}`);
-  disp.innerHTML = number;
+
+  if (typeof number === "number") {
+    number = number.toString(10);
+  }
+  console.log(`DISPLAY ${number}, ${typeof number}`);
+  if (hasDecimal(number)) {
+    console.log(`${number} has a decimal`);
+    disp.innerHTML = number;
+  } else {
+    console.log(`${number} does not have a decimal`);
+    disp.innerHTML = number + ".";
+  }
+  //disp.innerHTML = number;
 }
 
 function setFunction(operation) {
@@ -190,6 +204,11 @@ function calculate() {
     }
     if (func === "×") {
       constant = term1;
+    } else if (func === "÷" && !inputString) {
+      if (typeof term2 !== "number") {
+        term2 = term1;
+      }
+
     } else {
       constant = term2;
     }
@@ -198,7 +217,14 @@ function calculate() {
       negative = false;
     }
     console.log(`term1 ${term1} term2 ${term2} constant ${constant}`);
-    term1 = operator()
+    if (func === "×" && !inputString) {
+      term1 = term1 ** 2;
+    } else if (func === "÷" && !inputString) {
+      term1 = term1 / term2;
+    } else {
+      term1 = operator();
+    }
+    //term1 = operator();
     display(term1);
   } else if (!inputString) {
     term1 = parseFloat(document.getElementById("display").innerHTML);
@@ -252,6 +278,7 @@ function minusButton() {
   if (!inputString && (func !== "-" || typeof func !== "string")) {
     console.log("make it negative");
     negative = true;
+    display("-0");
   } else if (typeof term1 === "number" && typeof term2 === "number" && !inputString) {
     console.log(`term1 ${term1} term2 ${term2}`);
     term1 = operator();
