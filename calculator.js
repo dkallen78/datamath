@@ -78,6 +78,11 @@ document.onkeypress = function(event) {
 }
 
 function clearAll() {
+  //----------------------------------------------------//
+  //Clears the memory of the calculator and             //
+  //  resets it to 0                                    //
+  //----------------------------------------------------//
+
   overflow = false;
   inputString = "0";
   term1 = null;
@@ -88,11 +93,13 @@ function clearAll() {
 }
 
 function clearLast() {
-  console.log("clear element");
+  //----------------------------------------------------//
+  //Clears the last number element entered from the     //
+  //  key pad                                           //
+  //----------------------------------------------------//
+
   if (overflow) {
-    console.log(term1)
     let disp = document.getElementById("display");
-    //let value =
     term1 = parseFloat(disp.innerHTML.slice(1));
     display(term1);
     overflow = false;
@@ -101,16 +108,23 @@ function clearLast() {
     display(inputString);
   }
 
-
 }
 
 function decimalButton() {
+  //----------------------------------------------------//
+  //Inputs a decimal so long as the current number      //
+  //  doesn't already have one                          //
+  //----------------------------------------------------//
+
   if (!hasDecimal(inputString)) {
     inputNumber(".");
   }
 }
 
 function hasDecimal(numString) {
+  //----------------------------------------------------//
+  //Checks to see if a decimal is in a number           //
+  //----------------------------------------------------//
 
   for (let i = 0; i < numString.length - 1; i++) {
     if (numString[i] === ".") {
@@ -121,11 +135,12 @@ function hasDecimal(numString) {
 }
 
 function inputNumber(item) {
+  //----------------------------------------------------//
+  //Inputs a number to the calculator                   //
+  //----------------------------------------------------//
+
   if (overflow) return;
-  console.log(`INPUT ${item}`);
-  if (term1) console.log(`term1 ${term1}`);
   if (calced) {
-    console.log("calc country");
     constant = null;
     term1 = null;
     term2 = null;
@@ -136,11 +151,14 @@ function inputNumber(item) {
   } else {
     inputString += item;
   }
-  console.log(`inputString ${inputString}`);
   display(inputString)
 }
 
 function display(number) {
+  //----------------------------------------------------//
+  //Outputs a number to the display of the calculator   //
+  //----------------------------------------------------//
+
   let disp = document.getElementById("display");
   let digits = countDigits(number);
   if (digits[0] > 8) {
@@ -156,21 +174,22 @@ function display(number) {
   if (typeof number === "number") {
     number = number.toString(10);
   }
-  console.log(`DISPLAY ${number}, ${typeof number}`);
   if (hasDecimal(number)) {
-    console.log(`${number} has a decimal`);
     disp.innerHTML = number;
   } else {
-    console.log(`${number} does not have a decimal`);
     disp.innerHTML = number + ".";
   }
-  //disp.innerHTML = number;
 }
 
 function setFunction(operation) {
+  //----------------------------------------------------//
+  //Sets the current operation of the calculator to be  //
+  //  executed when the enter button is pressed or      //
+  //  another function key is pressed                   //
+  //----------------------------------------------------//
+
   if (overflow) return;
   calced = false;
-  console.log(`OPERATION ${operation}`);
   if (!inputString) {
     term1 = parseFloat(document.getElementById("display").innerHTML);
   } else if (typeof term1 === "number") {
@@ -192,17 +211,17 @@ function setFunction(operation) {
   constant = null;
   inputString = "";
 
-  console.log(`term1 ${term1} term2 ${term2}`);
-  console.log(`inputString ${inputString}`);
   func = operation;
   operator = operations[operation];
 }
 
 function calculate() {
+  //----------------------------------------------------//
+  //Handles the multiple functions of the "=" key       //
+  //----------------------------------------------------//
+
   if (overflow) return;
-  console.log("CALCULATE");
   if (typeof constant !== "number") {
-    console.log("NO CONSTANT");
 
     if (inputString) {
       term2 = parseFloat(inputString);
@@ -220,7 +239,6 @@ function calculate() {
       term2 *= -1;
       negative = false;
     }
-    console.log(`term1 ${term1} term2 ${term2} constant ${constant}`);
     if (func === "×" && !inputString) {
       term1 = term1 ** 2;
     } else if (func === "÷" && !inputString) {
@@ -228,29 +246,28 @@ function calculate() {
     } else {
       term1 = operator();
     }
-    //term1 = operator();
     display(term1);
   } else if (!inputString) {
     term1 = parseFloat(document.getElementById("display").innerHTML);
     term1 = operator();
-    console.log(`term1 ${term1} term2 ${term2} constant ${constant}`);
     display(term1);
   } else {
     term1 = parseFloat(inputString);
     term2 = constant;
-    console.log(`term1 ${term1} term2 ${term2} constant ${constant}`);
     display(operator());
   }
-
-  //term2 = parseFloat(inputString);
-  //term1 = operator();
   inputString = "";
   calced = true;
-  //display(term1);
-
 }
 
 function countDigits(number) {
+  //----------------------------------------------------//
+  //Counts the number of digits in a number, both       //
+  //  before the decimal, and after                     //
+  //float-> number: number thats digits are             //
+  //  to be counted                                     //
+  //----------------------------------------------------//
+
   number = number.toString(10);
   let count = [0, 0];
   let index = 0;
@@ -264,11 +281,13 @@ function countDigits(number) {
 }
 
 function plusButton() {
+  //----------------------------------------------------//
+  //Handles everything that can happen when the "+"     //
+  //  is pressed                                        //
+  //----------------------------------------------------//
+
   if (overflow) return;
-  console.log("+");
   if (typeof term1 === "number" && typeof term2 === "number" && !inputString && !calced) {
-    console.log(`term1 ${term1} term2 ${term2}`);
-    console.log(`inputString ${inputString}`);
     term1 = add(term1, term2);
     display(term1);
   } else {
@@ -277,14 +296,16 @@ function plusButton() {
 }
 
 function minusButton() {
+  //----------------------------------------------------//
+  //Handles everything that can happen when the "-"     //
+  //  button is pressed                                 //
+  //----------------------------------------------------//
+
   if (overflow) return;
-  console.log("-");
   if (!inputString && (func !== "-" || typeof func !== "string")) {
-    console.log("make it negative");
     negative = true;
     display("-0");
   } else if (typeof term1 === "number" && typeof term2 === "number" && !inputString) {
-    console.log(`term1 ${term1} term2 ${term2}`);
     term1 = operator();
     display(term1);
   } else {
@@ -297,12 +318,13 @@ function timesButton() {
 }
 
 function percent() {
+  //----------------------------------------------------//
+  //Handles the percentage functions when "%" is pressed//
+  //----------------------------------------------------//
+
   if (overflow) return;
-  console.log("PERCENT");
   term2 = parseFloat(inputString);
   term2 = term1 * (term2 / 100);
-  console.log(`term1 ${term1} term2 ${term2}`);
-  console.log(`inputString ${inputString}`);
   if (func === "-") {
     display("-" + term2);
   } else {
