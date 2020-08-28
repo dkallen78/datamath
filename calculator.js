@@ -401,6 +401,7 @@ function calculate() {
       //  calculate the answer of term1 operated on by  //
       //  term2, then assign that value to term1        //
       //------------------------------------------------//
+
       term1 = operator();
     }
     display(term1);
@@ -579,15 +580,12 @@ function multiply(x, y) {
 
 function divide(x, y) {
   //----------------------------------------------------//
-  //Subtracts two numbers. The crazy upsizing/downsizing//
-  //  is to accomodate the "Curse of Floating Point     //
-  //  Numbers"                                          //
+  //Divides one number by another. The crazy upsizing/  //
+  //  downsizing is to accomodate the "Curse of Floating//
+  //  Point Numbers"                                    //
   //----------------------------------------------------//
 
   let digits = countDigits(x)[1] + countDigits(y)[1];
-  /*if (digits % 2 === 1) {
-    digits++;
-  }*/
   x *= 10 ** digits;
   y *= 10 ** digits;
   let quotient = x / y;
